@@ -2,7 +2,7 @@
  * @Description :
  * @Date        : 2022-04-10 17:16:51 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 17:25:18 +0800
+ * @LastEditTime: 2022-04-10 17:39:50 +0800
  * @LastEditors : JackChou
  */
 const fs = require('fs')
@@ -18,4 +18,18 @@ function writeDataToFile(filePath, data) {
   })
 }
 
-module.exports = { writeDataToFile }
+function bodyData(req) {
+  return new Promise((resolve, reject) => {
+    let body = ''
+    req.on('data', (chunk) => {
+      body += chunk.toString()
+    })
+    req.on('end', (err) => {
+      if (err) {
+        reject(err)
+      }
+      resolve(JSON.parse(body))
+    })
+  })
+}
+module.exports = { writeDataToFile, bodyData }

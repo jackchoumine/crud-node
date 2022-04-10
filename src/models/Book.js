@@ -2,7 +2,7 @@
  * @Description :
  * @Date        : 2022-04-10 16:26:20 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 17:26:07 +0800
+ * @LastEditTime: 2022-04-10 17:36:13 +0800
  * @LastEditors : JackChou
  */
 const books = require('../data/books')
@@ -28,6 +28,23 @@ function create(book) {
     try {
       await writeDataToFile('../data/books.json', [...books, newBook])
       resolve(newBook)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+function update(book) {
+  return new Promise(async (resolve, reject) => {
+    const newBooks = books.map((b) => {
+      if (b.id === book.id) {
+        return book
+      }
+      return b
+    })
+    try {
+      await writeDataToFile('../data/books.json', newBooks)
+      resolve(book)
     } catch (error) {
       reject(error)
     }

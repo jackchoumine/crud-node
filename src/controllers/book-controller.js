@@ -2,11 +2,11 @@
  * @Description :
  * @Date        : 2022-04-10 16:29:09 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 17:33:49 +0800
+ * @LastEditTime: 2022-04-10 17:41:16 +0800
  * @LastEditors : JackChou
  */
 const Book = require('../models/Book')
-
+const { bodyData } = require('../utils')
 async function getBooks(req, res, { id } = { id: '' }) {
   try {
     if (id) {
@@ -30,15 +30,10 @@ async function getBooks(req, res, { id } = { id: '' }) {
 
 async function addBook(req, res) {
   try {
-    let body = ''
-    req.on('data', (chunk) => {
-      body += chunk.toString()
-    })
-    req.on('end', async () => {
-      const book = await Book.create(JSON.parse(body))
-      res.writeHead(201, { 'Content-Type': 'application/json' })
-      res.end(JSON.stringify(book))
-    })
+    const book = await bodyData(req)
+    const newBook = await Book.create(book)
+    res.writeHead(201, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify(newBook))
   } catch (error) {
     console.log(error)
   }
