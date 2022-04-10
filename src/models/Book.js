@@ -2,7 +2,7 @@
  * @Description :
  * @Date        : 2022-04-10 16:26:20 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 18:08:01 +0800
+ * @LastEditTime: 2022-04-10 18:24:19 +0800
  * @LastEditors : JackChou
  */
 const books = require('../data/books')
@@ -36,15 +36,14 @@ function create(book) {
 
 function findByIdAndUpdate(id, book) {
   return new Promise(async (resolve, reject) => {
-    const needUpdateBook = books.find((book) => book.id === id)
-    if (!needUpdateBook) {
+    const index = books.findIndex((book) => book.id === id)
+    if (index === -1) {
       reject(new Error('Not Found'))
     } else {
-      const rest = books.filter((book) => book.id !== id)
-      const newBook = { ...needUpdateBook, ...book }
-      const newBooks = [...rest, newBook]
+      const newBook = { ...books[index], ...book }
+      books[index] = newBook
       try {
-        await writeDataToFile('../data/books.json', newBooks)
+        await writeDataToFile('../data/books.json', books)
         resolve(newBook)
       } catch (error) {
         reject(error)
@@ -53,11 +52,27 @@ function findByIdAndUpdate(id, book) {
   })
 }
 
+function deleteBook(id) {
+  return new Promise(async (resolve, reject) => {
+    const needDeleteBook = books.find((book) => book.id === id)
+    if (!needDeleteBook) {
+      resolve(false)
+    } else {
+      const rest = books.filter((book) => book.id !== id)
+      try {
+        await writeDataToFile('../data/books.json', rest)
+        resolve(needDeleteBook)
+      } catch (error) {
+        reject(error)
+      }
+    }
+  })
+}
 module.exports = {
   find,
   findById,
   create,
   findByIdAndUpdate,
   // update,
-  // delete: deleteBook,
+  delete: deleteBook,
 }

@@ -2,7 +2,7 @@
  * @Description : 应用入口
  * @Date        : 2022-04-10 16:00:20 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 18:06:37 +0800
+ * @LastEditTime: 2022-04-10 18:10:04 +0800
  * @LastEditors : JackChou
  */
 const http = require('http')
@@ -28,7 +28,7 @@ const server = http.createServer((req, res) => {
       addBook(req, res)
       break
     case 'DELETE':
-      deleteBook(req, res)
+      deleteBook(req, res, params)
       break
     case 'PUT':
       updateBook(req, res, params)
