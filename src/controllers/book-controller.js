@@ -2,7 +2,7 @@
  * @Description :
  * @Date        : 2022-04-10 16:29:09 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 17:41:16 +0800
+ * @LastEditTime: 2022-04-10 18:06:59 +0800
  * @LastEditors : JackChou
  */
 const Book = require('../models/Book')
@@ -38,4 +38,29 @@ async function addBook(req, res) {
     console.log(error)
   }
 }
-module.exports = { getBooks, addBook }
+
+async function updateBook(req, res, { id } = { id: '' }) {
+  try {
+    if (!id) {
+      res.writeHead(404, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ message: 'Not Found' }))
+      return
+    }
+    const book = await bodyData(req)
+    const newBook = await Book.findByIdAndUpdate(id, book).catch((error) => {
+      res.writeHead(404, { 'Content-Type': 'application/json' })
+      res.end(JSON.stringify({ message: 'Not Found' }))
+      return
+    })
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    res.end(JSON.stringify(newBook))
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+module.exports = {
+  getBooks,
+  addBook,
+  updateBook,
+}

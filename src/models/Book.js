@@ -2,7 +2,7 @@
  * @Description :
  * @Date        : 2022-04-10 16:26:20 +0800
  * @Author      : JackChou
- * @LastEditTime: 2022-04-10 17:36:13 +0800
+ * @LastEditTime: 2022-04-10 18:08:01 +0800
  * @LastEditors : JackChou
  */
 const books = require('../data/books')
@@ -34,19 +34,21 @@ function create(book) {
   })
 }
 
-function update(book) {
+function findByIdAndUpdate(id, book) {
   return new Promise(async (resolve, reject) => {
-    const newBooks = books.map((b) => {
-      if (b.id === book.id) {
-        return book
+    const needUpdateBook = books.find((book) => book.id === id)
+    if (!needUpdateBook) {
+      reject(new Error('Not Found'))
+    } else {
+      const rest = books.filter((book) => book.id !== id)
+      const newBook = { ...needUpdateBook, ...book }
+      const newBooks = [...rest, newBook]
+      try {
+        await writeDataToFile('../data/books.json', newBooks)
+        resolve(newBook)
+      } catch (error) {
+        reject(error)
       }
-      return b
-    })
-    try {
-      await writeDataToFile('../data/books.json', newBooks)
-      resolve(book)
-    } catch (error) {
-      reject(error)
     }
   })
 }
@@ -55,6 +57,7 @@ module.exports = {
   find,
   findById,
   create,
+  findByIdAndUpdate,
   // update,
   // delete: deleteBook,
 }
