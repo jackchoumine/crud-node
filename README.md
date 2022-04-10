@@ -1,2 +1,3 @@
-# curd-node
-node curd rest api
+# crud-node
+
+node crud rest api
