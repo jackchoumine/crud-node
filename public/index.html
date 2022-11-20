@@ -1,0 +1,83 @@
+<!--
+ * @Description : 
+ * @Date        : 2022-11-20 21:42:55 +0800
+ * @Author      : JackChou
+ * @LastEditTime: 2022-11-20 21:42:55 +0800
+ * @LastEditors : JackChou
+-->
+<!--public/index.html-->
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>content-disposition 示例</title>
+  <style>
+    form {
+      padding: 20px;
+      border: 1px gray solid;
+      background: yellowgreen;
+    }
+
+    .form-item {
+      padding: 10px 0;
+    }
+
+    #commit {
+      display: block;
+      width: 80px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      border: 1px solid #666;
+      cursor: pointer;
+      background: #eee;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>请提交您的个人资料</h1>
+  <form>
+    <div class="form-item">
+      <label for="name">姓名：</label>
+      <input type="text" name="name" id="name" />
+    </div>
+    <div class="form-item">
+      <label for="pic">照片：</label>
+      <input type="file" name="image" id="image" />
+    </div>
+    <div class="form-item"><span id="commit">提交</span></div>
+  </form>
+</body>
+<script>
+  function upload() {
+    var formData = new FormData();
+    var name = document.querySelector("#name").value;
+    var image = document.querySelector("#image").files[0];
+    formData.append("name", name);
+    formData.append("image", image);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/user");
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+        console.log(xhr.responseText);
+        alert(xhr.responseText);
+      }
+    };
+    xhr.send(formData);
+  }
+
+  document.querySelector("#commit").addEventListener(
+    "click",
+    function () {
+      upload();
+    },
+    false
+  );
+</script>
+
+</html>
